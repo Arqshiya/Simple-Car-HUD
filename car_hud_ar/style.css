@@ -1,0 +1,115 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    overflow: hidden;
+    background: transparent;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.car-hud {
+    position: absolute;
+    left: 50%;
+    bottom: 4vh;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: flex-end;
+    gap: 2.5vh;
+    pointer-events: none;
+}
+
+/* Gear-km */
+.car-hud-left {
+    display: flex;
+    gap: 1.5vh;
+}
+
+.hud-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.hud-label {
+    font-size: 1vh;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.1vh;
+}
+
+.hud-value {
+    font-size: 3.2vh;
+    font-weight: 900;
+    color: white;
+    line-height: 3.5vh;
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.hud-unit {
+    font-size: 1vh;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+
+.hud-icon-group {
+    display: flex;
+    gap: 1.2vh;
+}
+
+.hud-icon {
+    position: relative;
+    width: 4.5vh;
+    height: 4.5vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.8vh;
+    background: rgba(10, 10, 10, 0.4);
+    border: 0.25vh solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.hud-icon img {
+    width: 2.2vh;
+    height: 2.2vh;
+    object-fit: contain;
+    opacity: 0.8;
+}
+
+.hud-icon span {
+    font-size: 1.1vh;
+    font-weight: 800;
+    color: white;
+    margin-top: -0.2vh;
+}
+
+/* color-status */
+
+
+.status-on {
+    border-color: rgba(0, 255, 120, 0.8) !important;
+    box-shadow: 0 0 10px rgba(0, 255, 120, 0.2);
+}
+.status-on img { opacity: 1; }
+
+
+.status-warning {
+    border-color: rgba(255, 200, 0, 0.8) !important;
+    box-shadow: 0 0 10px rgba(255, 200, 0, 0.2);
+}
+.status-warning span { color: #ffc800; }
+
+.status-off {
+    border-color: rgba(255, 60, 60, 0.8) !important;
+    box-shadow: 0 0 10px rgba(255, 60, 60, 0.2);
+}
+.status-off img { opacity: 0.5; filter: grayscale(1); }
+.status-off span { color: #ff3c3c; }

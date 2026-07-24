@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="car-hud" class="car-hud hidden">
+        <div class="car-hud-left">
+            <div class="hud-item">
+                <span class="hud-label">SPEED</span>
+                <span id="speed" class="hud-value">0</span>
+                <span class="hud-unit">KM/H</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">GEAR</span>
+                <span id="gear" class="hud-value">N</span>
+            </div>
+        </div>
+
+        <div class="car-hud-right">
+            <div class="hud-icon-group">
+                <div id="fuel" class="hud-icon">
+                    <img src="img/hud_fuel.png">
+                    <span id="fuel-value">0</span>
+                </div>
+
+                <div id="engine" class="hud-icon">
+                    <img src="img/hud_engine.png">
+                    <span id="engine-value">0</span>
+                </div>
+
+                <div id="lock" class="hud-icon">
+                    <img src="img/hud_lock.png">
+                </div>
+
+                <div id="seatbelt" class="hud-icon">
+                    <img src="img/hud_seatbelt.png">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
