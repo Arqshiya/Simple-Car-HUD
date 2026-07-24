@@ -37,7 +37,7 @@ local function getVehicleData(ped, vehicle)
     }
 end
 
--- حلقه اصلی
+ 
 CreateThread(function()
     while true do
         local sleep = 500
