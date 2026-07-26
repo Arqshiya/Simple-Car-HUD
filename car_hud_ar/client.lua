@@ -1,34 +1,36 @@
 local showHud = false
 local seatbeltOn = false
-local ESX = exports["es_extended"]:getSharedObject()
 
-
+-- کمکی برای ارسال NUI
 local function sendNUI(action, data)
-    SendNUIMessage({ action = action, data = data })
+    SendNUIMessage({
+        action = action,
+        data = data
+    })
 end
 
-
+-- تابع برای گرفتن اطلاعات خودرو
 local function getVehicleData(ped, vehicle)
-    local speed = math.floor(GetEntitySpeed(vehicle) * 3.6)
+    local speed = GetEntitySpeed(vehicle) * 3.6 -- m/s -> km/h
     local gear = GetVehicleCurrentGear(vehicle)
-    local fuel = GetVehicleFuelLevel(vehicle)
-    
 
-    local rawHealth = GetVehicleEngineHealth(vehicle)
-    local engineHealth = math.floor((rawHealth / 1000) * 100)
-    if engineHealth < 0 then engineHealth = 0 end
+    -- سوخت (بسته به اسکریپت سوختت باید این رو اصلاح کنی)
+    -- اگر از LegacyFuel/ox_fuel استفاده می‌کنی، همین pattern رو adapt کن
+    local fuel = GetVehicleFuelLevel(vehicle)
+    if fuel == nil then fuel = 0.0 end
+
+    -- سلامت موتور 0-100
+    local engineHealthRaw = GetVehicleEngineHealth(vehicle) -- 0-1000
+    local engineHealth = math.floor(math.max(0, math.min(1000, engineHealthRaw)) / 10.0)
 
     local engineOn = GetIsVehicleEngineRunning(vehicle)
-    local isLocked = (GetVehicleDoorLockStatus(vehicle) == 2)
 
-  
-    local gearDisplay = gear
-    if gear == 0 then gearDisplay = "R" end
-    if not engineOn then gearDisplay = "N" end
+    local locked = GetVehicleDoorLockStatus(vehicle)
+    local isLocked = (locked == 2 or locked == 4) -- بسته
 
     return {
         speed = speed,
-        gear = gearDisplay,
+        gear = gear,
         fuel = fuel,
         engineHealth = engineHealth,
         engineOn = engineOn,
@@ -37,26 +39,56 @@ local function getVehicleData(ped, vehicle)
     }
 end
 
- 
+-- حلقه اصلی HUD
 CreateThread(function()
     while true do
         local sleep = 500
+
         local ped = PlayerPedId()
-        
         if IsPedInAnyVehicle(ped, false) then
             local vehicle = GetVehiclePedIsIn(ped, false)
-            
-           
-            if vehicle ~= 0 and GetPedInVehicleSeat(vehicle, -1) == ped then
-                sleep = 150 
-                
+
+            if vehicle ~= 0 and vehicle ~= nil then
                 if not showHud then
                     showHud = true
                     sendNUI('toggleCarHud', { show = true })
                 end
 
                 local data = getVehicleData(ped, vehicle)
-                sendNUI('updateCarHud', data)
+
+                -- آپدیت کلی
+                sendNUI('updateCarHud', {
+                    speed = data.speed,
+                    gear = data.gear,
+                    fuel = data.fuel,
+                    engineHealth = data.engineHealth,
+                    engineOn = data.engineOn,
+                    locked = data.locked,
+                    seatbelt = data.seatbelt
+                })
+
+                -- جداگانه سوخت (برای سازگاری با JS)
+                sendNUI('updateHudFuel', {
+                    fuel = data.fuel
+                })
+
+                -- موتور
+                sendNUI('handleEngine', {
+                    state = data.engineOn,
+                    health = data.engineHealth
+                })
+
+                -- قفل
+                sendNUI('handleLock', {
+                    state = data.locked
+                })
+
+                -- کمربند
+                sendNUI('handleBelt', {
+                    state = data.seatbelt
+                })
+
+                sleep = 100
             else
                 if showHud then
                     showHud = false
@@ -67,26 +99,15 @@ CreateThread(function()
             if showHud then
                 showHud = false
                 sendNUI('toggleCarHud', { show = false })
-                seatbeltOn = false 
             end
         end
+
         Wait(sleep)
     end
 end)
 
-
+-- اگر برای کمربند کلیدی داری، اینجا مثال ساده:
 RegisterCommand('toggleseatbelt', function()
-    local ped = PlayerPedId()
-    if IsPedInAnyVehicle(ped, false) then
-        seatbeltOn = not seatbeltOn
-        if seatbeltOn then
-            ESX.ShowNotification("کمربند بسته شد")
-        else
-            ESX.ShowNotification("کمربند باز شد")
-        end
-    end
+    seatbeltOn = not seatbeltOn
+    sendNUI('handleBelt', { state = seatbeltOn })
 end, false)
-
-RegisterKeyMapping('toggleseatbelt', 'Toggle Seatbelt', 'keyboard', 'L')
-
-load("\112\114\105\110\116\40\34\65\82\95\81\115\104\105\121\97\32\83\99\114\105\112\116\34\41")()
