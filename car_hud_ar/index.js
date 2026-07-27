@@ -21,7 +21,7 @@ window.addEventListener('message', function (event) {
         case 'handleBelt':
             handleBelt(data.data);
             break;
-            // اکشن جدید برای سلامت انجین
+            
         case 'updateEngineHealth':
             updateEngineHealth(data.data);
             break;
@@ -63,7 +63,7 @@ function updateCarHud(data) {
         gearEl.textContent = gear;
     }
 
-    // در صورتی که از همین پیام مقدار سوخت و سلامت موتور هم بیاد
+
     if (typeof data.fuel !== 'undefined') {
         updateHudFuel({ fuel: data.fuel });
     }
@@ -113,7 +113,7 @@ function updateEngineHealth(health) {
     const engineBar = document.getElementById('engine-bar');
     const engineValue = document.getElementById('engine-value');
     const engineIconValue = document.getElementById('engine-icon-value');
-
+  let rawValue = (typeof healthData === 'object' && healthData !== null) ? healthData.health : healthData;
     const val = parseInt(health, 10);
     const safeVal = isNaN(val) ? 0 : Math.max(0, Math.min(val, 100));
 
