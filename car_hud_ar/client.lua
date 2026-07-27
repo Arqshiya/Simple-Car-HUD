@@ -14,8 +14,7 @@ local function getVehicleData(ped, vehicle)
     local speed = GetEntitySpeed(vehicle) * 3.6 -- m/s -> km/h
     local gear = GetVehicleCurrentGear(vehicle)
 
-    -- سوخت (بسته به اسکریپت سوختت باید این رو اصلاح کنی)
-    -- اگر از LegacyFuel/ox_fuel استفاده می‌کنی، همین pattern رو adapt کن
+
     local fuel = GetVehicleFuelLevel(vehicle)
     if fuel == nil then fuel = 0.0 end
 
@@ -106,7 +105,7 @@ CreateThread(function()
     end
 end)
 
--- اگر برای کمربند کلیدی داری، اینجا مثال ساده:
+
 RegisterCommand('toggleseatbelt', function()
     seatbeltOn = not seatbeltOn
     sendNUI('handleBelt', { state = seatbeltOn })
