@@ -1,7 +1,7 @@
 local showHud = false
 local seatbeltOn = false
 
--- کمکی برای ارسال NUI
+
 local function sendNUI(action, data)
     SendNUIMessage({
         action = action,
@@ -38,7 +38,7 @@ local function getVehicleData(ped, vehicle)
     }
 end
 
--- حلقه اصلی HUD
+
 CreateThread(function()
     while true do
         local sleep = 500
@@ -55,7 +55,7 @@ CreateThread(function()
 
                 local data = getVehicleData(ped, vehicle)
 
-                -- آپدیت کلی
+                
                 sendNUI('updateCarHud', {
                     speed = data.speed,
                     gear = data.gear,
@@ -66,7 +66,7 @@ CreateThread(function()
                     seatbelt = data.seatbelt
                 })
 
-                -- جداگانه سوخت (برای سازگاری با JS)
+               
                 sendNUI('updateHudFuel', {
                     fuel = data.fuel
                 })
